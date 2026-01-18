@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Сканер QR</title>
+</head>
+<body>
+
+<h2>Сканируйте QR-код</h2>
+<div id="reader" style="width:300px"></div>
+<p id="result"></p>
+
+<script src="https://unpkg.com/html5-qrcode"></script>
+<script>
+  const result = document.getElementById("result");
+
+  const html5QrCode = new Html5Qrcode("reader");
+
+  Html5Qrcode.getCameras().then(cameras => {
+    if (cameras && cameras.length) {
+      html5QrCode.start(
+        cameras[0].id,
+        { fps: 10, qrbox: 250 },
+        qrCodeMessage => {
+          result.innerText = "QR-код: " + qrCodeMessage;
+          html5QrCode.stop();
+        },
+        errorMessage => {
+          // можно игнорировать ошибки сканирования
+        }
+      );
+    }
+  }).catch(err => {
+    alert("Камера недоступна");
+  });
+</script>
+
+</body>
+</html>
